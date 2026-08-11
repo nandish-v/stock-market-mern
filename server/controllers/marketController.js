@@ -1,0 +1,7 @@
+const market = require('../services/marketService');
+function symbol(req, res, next) { const value = req.params.symbol?.trim().toUpperCase(); if (!/^[A-Z0-9.:-]{1,20}$/.test(value)) return res.status(400).json({ success: false, message: 'Invalid stock symbol' }); req.stockSymbol = value; next(); }
+async function quote(req, res, next) { try { res.json({ success: true, data: await market.quote(req.stockSymbol) }); } catch (e) { next(e); } }
+async function history(req, res, next) { try { const interval = req.query.interval || '1day'; const allowed = ['1min','5min','15min','30min','1h','1day','1week','1month']; if (!allowed.includes(interval)) return res.status(400).json({ success:false,message:'Invalid interval' }); res.json({ success: true, data: await market.history(req.stockSymbol, interval, Math.min(Number(req.query.outputsize) || 30, 5000)) }); } catch (e) { next(e); } }
+async function search(req, res, next) { try { const query = String(req.query.query || '').trim(); if (query.length < 1 || query.length > 50) return res.status(400).json({ success:false,message:'Search query must be 1–50 characters' }); res.json({ success:true, data: await market.search(query) }); } catch(e) { next(e); } }
+async function movers(direction, req, res, next) { try { res.json({ success:true, data: await market.movers(direction) }); } catch(e) { next(e); } }
+module.exports = { symbol, quote, history, search, movers };

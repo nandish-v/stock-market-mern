@@ -1,0 +1,11 @@
+const express = require('express');
+const { protect } = require('../middleware/auth');
+const controller = require('../controllers/marketController');
+const router = express.Router();
+router.use(protect);
+router.get('/quote/:symbol', controller.symbol, controller.quote);
+router.get('/history/:symbol', controller.symbol, controller.history);
+router.get('/search', controller.search);
+router.get('/top-gainers', (req,res,next) => controller.movers('gainers',req,res,next));
+router.get('/top-losers', (req,res,next) => controller.movers('losers',req,res,next));
+module.exports = router;

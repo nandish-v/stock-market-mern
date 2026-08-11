@@ -1,0 +1,5 @@
+const Watchlist=require('../models/Watchlist');
+async function list(req,res,next){try{const items=await Watchlist.find({userId:req.user._id}).sort({createdAt:-1}).lean();res.json({success:true,data:items})}catch(e){next(e)}}
+async function add(req,res,next){try{const symbol=String(req.body.symbol||'').trim().toUpperCase();if(!/^[A-Z0-9.:-]{1,20}$/.test(symbol))return res.status(400).json({success:false,message:'Invalid stock symbol'});const item=await Watchlist.findOneAndUpdate({userId:req.user._id,symbol},{userId:req.user._id,symbol},{upsert:true,new:true,setDefaultsOnInsert:true});res.status(201).json({success:true,data:item})}catch(e){if(e.code===11000)return res.status(409).json({success:false,message:'Symbol is already in your watchlist'});next(e)}}
+async function remove(req,res,next){try{const symbol=req.params.symbol.toUpperCase();const result=await Watchlist.findOneAndDelete({userId:req.user._id,symbol});if(!result)return res.status(404).json({success:false,message:'Symbol is not in your watchlist'});res.json({success:true,message:'Removed from watchlist'})}catch(e){next(e)}}
+module.exports={list,add,remove};

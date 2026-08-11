@@ -1,0 +1,2 @@
+const express=require('express'); const {protect}=require('../middleware/auth'); const controller=require('../controllers/userController');
+const router=express.Router();router.use(protect);router.get('/dashboard',controller.getDashboard);router.get('/portfolio',controller.getPortfolio);router.get('/transactions',controller.getTransactions);router.get('/holdings',controller.getHoldings);module.exports=router;

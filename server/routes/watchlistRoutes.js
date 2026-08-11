@@ -1,0 +1,1 @@
+const express=require('express');const {protect}=require('../middleware/auth');const controller=require('../controllers/watchlistController');const router=express.Router();router.use(protect);router.get('/',controller.list);router.post('/',controller.add);router.delete('/:symbol',controller.remove);module.exports=router;
