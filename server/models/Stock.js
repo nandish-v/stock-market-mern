@@ -1,0 +1,1 @@
+const mongoose=require('mongoose');const schema=new mongoose.Schema({symbol:{type:String,required:true,unique:true,uppercase:true,trim:true},companyName:{type:String,required:true,trim:true},exchange:{type:String,default:'NSE'},sector:{type:String,default:'Other'}},{timestamps:true});module.exports=mongoose.model('Stock',schema);

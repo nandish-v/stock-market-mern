@@ -1,0 +1,1 @@
+const express=require('express');const {protect,requireAdmin}=require('../middleware/auth');const controller=require('../controllers/adminController');const router=express.Router();router.use(protect,requireAdmin);router.get('/users',controller.users);router.get('/stocks',controller.stocks);router.get('/transactions',controller.transactions);module.exports=router;
